@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { CURRENT_YEAR } from "../config";
+import { CURRENT_YEAR } from "../../config";
 
 import style from "./footer.css";
 
