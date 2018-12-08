@@ -8,7 +8,7 @@ const Buttons = props => {
 
   switch (props.type) {
     case "loadmore": {
-      template = (<div className={styles.blue_btn}>{props.name}</div>);
+      template = (<div  onClick={()=>props.loadMore()} className={styles.blue_btn}>{props.name}</div>);
       break;
     }
     default:
