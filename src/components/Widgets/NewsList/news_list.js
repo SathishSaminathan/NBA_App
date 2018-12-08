@@ -3,6 +3,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import CardInfo from "../CardInfo/cardinfo";
 import Button from "../Buttons/buttons";
 import { URL } from "../../../config";
 
@@ -10,6 +11,7 @@ import styles from "./newsList.css";
 
 class NewsList extends Component {
   state = {
+    teams: [],
     item: [],
     start: this.props.start,
     end: this.props.start + this.props.amount,
@@ -17,14 +19,20 @@ class NewsList extends Component {
   };
 
   request = (start, end) => {
-    axios
-      .get(`http://localhost:3004/articles?_start=${start}&_end=${end}`)
-      .then(res => {
-        //   console.log(res.data)
+    if (this.state.teams.length < 1) {
+      axios.get(`${URL}/teams`).then(res => {
         this.setState({
-          item: [...this.state.item, ...res.data]
+          teams: res.data
         });
       });
+    }
+
+    axios.get(`${URL}/articles?_start=${start}&_end=${end}`).then(res => {
+      //   console.log(res.data)
+      this.setState({
+        item: [...this.state.item, ...res.data]
+      });
+    });
   };
 
   loadMore = () => {
@@ -53,6 +61,11 @@ class NewsList extends Component {
             <div>
               <div className={styles.newsList_item}>
                 <Link to={`/articles/${item.id}`}>
+                  <CardInfo
+                    teams={this.state.teams}
+                    team={item.team}
+                    date={item.date}
+                  /> 
                   <h2>{item.title}</h2>
                 </Link>
               </div>
@@ -77,7 +90,6 @@ class NewsList extends Component {
           loadMore={() => this.loadMore()}
           name="Load More News"
         />
-        <div onClick={() => this.loadMore()}>Load More</div>
       </div>
     );
   }
